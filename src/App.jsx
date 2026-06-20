@@ -401,11 +401,11 @@ function App() {
                       <td style={{textAlign: 'center', fontSize: '1.2rem'}}>
                         {reporte.tieneAdjunto ? '📎' : '-'}
                       </td>
-                      <td style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-                        <button className="btn-edit" style={{ background: '#008b8b' }} onClick={() => handleView(reporte)}>
+                      <td className="action-buttons-cell">
+                        <button className="action-btn-view" onClick={() => handleView(reporte)}>
                           👁️ Ver
                         </button>
-                        <button className="btn-edit" onClick={() => handleEdit(reporte)}>
+                        <button className="action-btn-edit" onClick={() => handleEdit(reporte)}>
                           ✏️ Modificar
                         </button>
                       </td>
