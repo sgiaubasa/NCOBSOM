@@ -194,10 +194,6 @@ function InformacionDocumentadaView() {
                     <option value="MG/">MG/</option>
                     <option value="SC ME P001">SC ME P001</option>
                     <option value="ITAU/">ITAU/</option>
-                    <option value="SGI-PR">SGI-PR</option>
-                    <option value="SGI-MA">SGI-MA</option>
-                    <option value="SGI-RG">SGI-RG</option>
-                    <option value="SGI-IN">SGI-IN</option>
                   </select>
                 </div>
 
@@ -210,10 +206,6 @@ function InformacionDocumentadaView() {
                   <label className="form-label">Tipo de Documento</label>
                   <select name="documento" className="glass-input" required defaultValue={formData.documento || ''}>
                     <option value="">Seleccione...</option>
-                    <option value="Procedimiento">Procedimiento</option>
-                    <option value="Manual">Manual</option>
-                    <option value="Registro">Registro</option>
-                    <option value="Instructivo">Instructivo</option>
                     <option value="Anexo">Anexo</option>
                   </select>
                 </div>
