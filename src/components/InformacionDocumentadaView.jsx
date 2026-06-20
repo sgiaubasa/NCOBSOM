@@ -113,7 +113,7 @@ function InformacionDocumentadaView() {
                 className="glass-input"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ flex: '1 1 300px' }}
+                style={{ width: '300px', flex: '0 0 auto' }}
               />
             </div>
           </div>
@@ -139,9 +139,6 @@ function InformacionDocumentadaView() {
                     <td className="action-buttons-cell" style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                       <button className="action-btn-view" onClick={() => handleView(doc)}>👁️ Ver</button>
                       <button className="action-btn-edit" onClick={() => handleEdit(doc)}>✏️ Modificar</button>
-                      <a href={doc.enlace} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                        <button className="action-btn-view" style={{ backgroundColor: '#64748b' }}>🔗 Archivo</button>
-                      </a>
                     </td>
                   </tr>
                 ))}
@@ -157,9 +154,8 @@ function InformacionDocumentadaView() {
 
       ) : (
 
-        <div className="content-grid">
-          <div className="glass-card">
-            <h2 style={{ color: 'var(--aubasa-dark)', marginBottom: '1.5rem', borderBottom: '2px solid var(--aubasa-blue)', paddingBottom: '0.5rem' }}>
+        <div className="glass-card">
+          <h2 style={{ color: 'var(--aubasa-dark)', marginBottom: '1.5rem', borderBottom: '2px solid var(--aubasa-blue)', paddingBottom: '0.5rem' }}>
               {isReadOnly ? 'Ver Documento' : (formData.sharepointId ? 'Modificar Documento' : 'Nuevo Documento')}
             </h2>
             <form onSubmit={async (e) => { 
@@ -243,7 +239,7 @@ function InformacionDocumentadaView() {
               </fieldset>
 
               <div className="form-actions" style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-                <button type="button" className="cancel-btn" onClick={() => setCurrentView('gallery')}>
+                <button type="button" className="submit-btn" style={{ background: '#666' }} onClick={() => setCurrentView('gallery')}>
                   {isReadOnly ? 'Volver' : 'Cancelar'}
                 </button>
                 {!isReadOnly && (
@@ -253,21 +249,8 @@ function InformacionDocumentadaView() {
                 )}
               </div>
             </form>
-          </div>
-
-          <div className="info-panel">
-            <div className="info-card">
-              <h3>Archivo del Documento</h3>
-              <p>El archivo PDF o Word se adjuntará aquí.</p>
-              <div className="file-upload-wrapper" style={{ marginTop: '1rem' }}>
-                <input type="file" id="doc-upload" style={{ display: 'none' }} />
-                <label htmlFor="doc-upload" style={{ cursor: 'pointer', color: 'var(--aubasa-dark)', fontWeight: '600' }}>
-                  Subir Documento (PDF/Word)
-                </label>
-              </div>
-            </div>
-          </div>
         </div>
+
       )}
     </>
   );
