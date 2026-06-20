@@ -500,14 +500,16 @@ textarea.glass-input {
 .action-btn-view, .action-btn-edit {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   font-size: 0.85rem;
   font-weight: 700;
   border-radius: 100px;
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid transparent;
+  white-space: nowrap;
 }
 
 .action-btn-view {
