@@ -112,6 +112,7 @@ function App() {
   const [tipoFilter, setTipoFilter] = useState('Todos');
   const [origenFilter, setOrigenFilter] = useState('Todos');
   const [sectorFilter, setSectorFilter] = useState('Todos');
+  const [isReadOnly, setIsReadOnly] = useState(false);
 
   // Auto-calcular número al seleccionar Tipo de Parte para registros nuevos
   React.useEffect(() => {
@@ -189,11 +190,9 @@ function App() {
     try {
       // Determinar si es un registro nuevo (POST) o una actualización (UPDATE)
       let targetUrl = API_POST_URL;
-      let isUpdate = false;
       
       if (dataToSend.sharepointId && API_UPDATE_URL !== '') {
         targetUrl = API_UPDATE_URL;
-        isUpdate = true;
       }
 
       const response = await fetch(targetUrl, {
@@ -218,8 +217,8 @@ function App() {
   };
 
   const handleEdit = (item) => {
+    setIsReadOnly(false);
     setFormData({
-      ...formData,
       sharepointId: item.sharepointId, 
       idTipo: item.id,
       tipoParte: item.tipoParte,
@@ -244,6 +243,11 @@ function App() {
       fechaEvaluacionEficacia: item.fechaEvaluacionEficacia
     });
     setCurrentView('form');
+  };
+
+  const handleView = (item) => {
+    handleEdit(item);
+    setIsReadOnly(true);
   };
 
   // Filtrar Reportes
@@ -290,8 +294,9 @@ function App() {
             Mis Hallazgos
           </div>
           <div 
-            className={`nav-item ${currentView === 'form' ? 'active' : ''}`}
+            className={`nav-item ${currentView === 'form' && !isReadOnly ? 'active' : ''}`}
             onClick={() => {
+              setIsReadOnly(false);
               // Limpiar form al crear nuevo
               setFormData({
                 sharepointId: null, idTipo: '', tipoParte: '', numero: '', fechaDeteccion: '', sector: [], origen: '', detectadoPor: '', estado: '', archivosAdjuntos: null,
@@ -396,7 +401,10 @@ function App() {
                       <td style={{textAlign: 'center', fontSize: '1.2rem'}}>
                         {reporte.tieneAdjunto ? '📎' : '-'}
                       </td>
-                      <td>
+                      <td style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                        <button className="btn-edit" style={{ background: '#008b8b' }} onClick={() => handleView(reporte)}>
+                          👁️ Ver
+                        </button>
                         <button className="btn-edit" onClick={() => handleEdit(reporte)}>
                           ✏️ Modificar
                         </button>
@@ -420,8 +428,9 @@ function App() {
              ========================================= */
           <div className="content-grid">
             <div className="glass-card">
-              <form className="form-grid" onSubmit={handleSubmit}>
-                <div className="form-group">
+              <form onSubmit={handleSubmit}>
+                <fieldset disabled={isReadOnly} className="form-grid" style={{ border: 'none', padding: 0, margin: 0 }}>
+                  <div className="form-group">
                   <label className="form-label">ID Tipo</label>
                   <input type="text" name="idTipo" className="glass-input" placeholder="Ej: No Conformidad Mayor-3" value={formData.idTipo} onChange={handleChange}/>
                 </div>
@@ -573,7 +582,12 @@ function App() {
                     <option value="Cerrada">Cerrada</option>
                   </select>
                 </div>
-                <button type="submit" className="submit-btn">Guardar Registro</button>
+                </fieldset>
+                
+                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                  {!isReadOnly && <button type="submit" className="submit-btn">Guardar Registro</button>}
+                  {isReadOnly && <button type="button" className="submit-btn" style={{ background: '#666' }} onClick={() => setCurrentView('gallery')}>Volver a la Galería</button>}
+                </div>
               </form>
             </div>
 
