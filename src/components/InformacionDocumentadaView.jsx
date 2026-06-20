@@ -93,12 +93,78 @@ function InformacionDocumentadaView() {
 
         <div className="content-grid">
           <div className="glass-card">
-            <h2 style={{ color: 'var(--aubasa-dark)', marginBottom: '1.5rem' }}>Nuevo Documento</h2>
-            <p style={{ marginBottom: '2rem', color: '#666' }}>
-              Aquí implementaremos el formulario para cargar o modificar la Información Documentada cuando conectemos Power Automate.
-            </p>
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <button type="button" className="submit-btn" style={{ background: '#666' }} onClick={() => setCurrentView('gallery')}>Volver a la Galería</button>
+            <h2 style={{ color: 'var(--aubasa-dark)', marginBottom: '1.5rem', borderBottom: '2px solid var(--aubasa-blue)', paddingBottom: '0.5rem' }}>
+              Nuevo Documento
+            </h2>
+            <form onSubmit={(e) => { e.preventDefault(); alert("Funcionalidad pendiente de conexión con Power Automate"); }}>
+              <fieldset className="form-grid" style={{ border: 'none', padding: 0, margin: 0 }}>
+                
+                <div className="form-group">
+                  <label className="form-label">Código</label>
+                  <select name="codigo" className="glass-input" required>
+                    <option value="">Seleccione el código...</option>
+                    <option value="SGI-PR">SGI-PR (Procedimiento)</option>
+                    <option value="SGI-MA">SGI-MA (Manual)</option>
+                    <option value="SGI-RG">SGI-RG (Registro)</option>
+                    <option value="SGI-IN">SGI-IN (Instructivo)</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">N° de Código</label>
+                  <input type="number" name="numeroCodigo" className="glass-input" required placeholder="Ej: 001" />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Tipo de Documento</label>
+                  <select name="documento" className="glass-input" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Procedimiento">Procedimiento</option>
+                    <option value="Manual">Manual</option>
+                    <option value="Registro">Registro</option>
+                    <option value="Instructivo">Instructivo</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Número de Documento</label>
+                  <input type="number" name="numeroDocumento" className="glass-input" required placeholder="Ej: 1" />
+                </div>
+
+                <div className="form-group full-width">
+                  <label className="form-label">Nombre del Documento</label>
+                  <input type="text" name="nombre" className="glass-input" required placeholder="Ej: Procedimiento de Auditorías Internas" />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Revisión</label>
+                  <input type="text" name="revision" className="glass-input" required placeholder="Ej: 01" />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Fecha</label>
+                  <input type="date" name="fecha" className="glass-input" required />
+                </div>
+
+              </fieldset>
+              
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <button type="submit" className="submit-btn">Guardar Documento</button>
+                <button type="button" className="submit-btn" style={{ background: '#666' }} onClick={() => setCurrentView('gallery')}>Cancelar</button>
+              </div>
+            </form>
+          </div>
+
+          <div className="info-panel">
+            <div className="info-card">
+              <h3>Archivo del Documento</h3>
+              <p>El archivo PDF o Word se adjuntará aquí.</p>
+              <div className="file-upload-wrapper" style={{ marginTop: '1rem' }}>
+                <input type="file" id="doc-upload" style={{ display: 'none' }} />
+                <label htmlFor="doc-upload" style={{ cursor: 'pointer', color: 'var(--aubasa-dark)', fontWeight: '600' }}>
+                  Subir Documento (PDF/Word)
+                </label>
+              </div>
             </div>
           </div>
         </div>
