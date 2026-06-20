@@ -13,7 +13,9 @@ function InformacionDocumentadaView() {
   
   const API_GET_URL = '/api/get-info-doc';
   const API_POST_URL = '/api/post-info-doc';
-  const API_UPDATE_URL = ''; // Pendiente
+  const API_UPDATE_URL = '/api/update-info-doc';
+  
+  const [formData, setFormData] = useState({});
 
   // Efecto para cargar los datos cuando exista el flujo
   useEffect(() => {
@@ -28,7 +30,11 @@ function InformacionDocumentadaView() {
           const mappedDocs = itemsArray.map(item => ({
             sharepointId: item.ID,
             id: item.ID,
-            codigo: item.Codigo_x0020_N_x00b0_ || `${item.Codigo?.Value || ''}${item.Documento?.Value || ''}${item.N_x00fa_mero || item.N_x00b0_ || ''}`,
+            codigoCompleto: item.Codigo_x0020_N_x00b0_ || `${item.Codigo?.Value || ''}${item.Documento?.Value || ''}${item.N_x00fa_mero || item.N_x00b0_ || ''}`,
+            codigo: item.Codigo?.Value || '',
+            numeroCodigo: item.N_x00b0_ || '',
+            documento: item.Documento?.Value || '',
+            numeroDocumento: item.N_x00fa_mero || item.Número || '',
             nombre: item.Nombre || '',
             revision: item.Revision || '',
             fecha: item.Fecha ? item.Fecha.split('T')[0] : (item.Created ? item.Created.split('T')[0] : ''),
@@ -42,9 +48,28 @@ function InformacionDocumentadaView() {
       });
   }, []);
 
+  const handleEdit = (doc) => {
+    setFormData({
+      sharepointId: doc.sharepointId,
+      codigo: doc.codigo,
+      numeroCodigo: doc.numeroCodigo,
+      documento: doc.documento,
+      numeroDocumento: doc.numeroDocumento,
+      nombre: doc.nombre,
+      revision: doc.revision,
+      fecha: doc.fecha
+    });
+    setCurrentView('form');
+  };
+
+  const handleNew = () => {
+    setFormData({});
+    setCurrentView('form');
+  };
+
   const filteredDocs = documentos.filter(doc => 
-    doc.codigo.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    doc.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    (doc.codigoCompleto || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+    (doc.nombre || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -67,7 +92,7 @@ function InformacionDocumentadaView() {
                     boxShadow: '0 4px 15px rgba(2, 132, 199, 0.4)',
                     transform: 'translateY(-2px)'
                   }}
-                  onClick={() => setCurrentView('form')}
+                  onClick={handleNew}
                >
                  ➕ Nuevo Documento
                </button>
@@ -99,14 +124,15 @@ function InformacionDocumentadaView() {
               <tbody>
                 {filteredDocs.map(doc => (
                   <tr key={doc.id}>
-                    <td style={{fontWeight: 'bold'}}>{doc.codigo}</td>
+                    <td style={{fontWeight: 'bold'}}>{doc.codigoCompleto}</td>
                     <td>{doc.nombre}</td>
                     <td>{doc.revision}</td>
                     <td>{doc.fecha}</td>
-                    <td className="action-buttons-cell">
+                    <td className="action-buttons-cell" style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
                       <a href={doc.enlace} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                         <button className="action-btn-view">👁️ Abrir</button>
                       </a>
+                      <button className="action-btn-edit" onClick={() => handleEdit(doc)}>✏️ Modificar</button>
                     </td>
                   </tr>
                 ))}
@@ -125,12 +151,15 @@ function InformacionDocumentadaView() {
         <div className="content-grid">
           <div className="glass-card">
             <h2 style={{ color: 'var(--aubasa-dark)', marginBottom: '1.5rem', borderBottom: '2px solid var(--aubasa-blue)', paddingBottom: '0.5rem' }}>
-              Nuevo Documento
+              {formData.sharepointId ? 'Modificar Documento' : 'Nuevo Documento'}
             </h2>
             <form onSubmit={async (e) => { 
               e.preventDefault(); 
-              const formData = new FormData(e.target);
-              const dataToSend = Object.fromEntries(formData.entries());
+              const formEl = e.target;
+              const dataToSend = Object.fromEntries(new FormData(formEl).entries());
+              if (formData.sharepointId) {
+                dataToSend.sharepointId = formData.sharepointId;
+              }
               
               try {
                 // Determine URL (POST vs UPDATE)
@@ -159,7 +188,7 @@ function InformacionDocumentadaView() {
                 
                 <div className="form-group">
                   <label className="form-label">Código</label>
-                  <select name="codigo" className="glass-input" required>
+                  <select name="codigo" className="glass-input" required defaultValue={formData.codigo || ''}>
                     <option value="">Seleccione el código...</option>
                     <option value="SGI-PR">SGI-PR (Procedimiento)</option>
                     <option value="SGI-MA">SGI-MA (Manual)</option>
@@ -170,38 +199,39 @@ function InformacionDocumentadaView() {
 
                 <div className="form-group">
                   <label className="form-label">N° de Código</label>
-                  <input type="number" name="numeroCodigo" className="glass-input" required placeholder="Ej: 001" />
+                  <input type="number" name="numeroCodigo" className="glass-input" required placeholder="Ej: 001" defaultValue={formData.numeroCodigo || ''} />
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Tipo de Documento</label>
-                  <select name="documento" className="glass-input" required>
+                  <select name="documento" className="glass-input" required defaultValue={formData.documento || ''}>
                     <option value="">Seleccione...</option>
                     <option value="Procedimiento">Procedimiento</option>
                     <option value="Manual">Manual</option>
                     <option value="Registro">Registro</option>
                     <option value="Instructivo">Instructivo</option>
+                    <option value="Anexo">Anexo</option>
                   </select>
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Número de Documento</label>
-                  <input type="number" name="numeroDocumento" className="glass-input" required placeholder="Ej: 1" />
+                  <input type="number" name="numeroDocumento" className="glass-input" required placeholder="Ej: 1" defaultValue={formData.numeroDocumento || ''} />
                 </div>
 
                 <div className="form-group full-width">
                   <label className="form-label">Nombre del Documento</label>
-                  <input type="text" name="nombre" className="glass-input" required placeholder="Ej: Procedimiento de Auditorías Internas" />
+                  <input type="text" name="nombre" className="glass-input" required placeholder="Ej: Procedimiento de Auditorías Internas" defaultValue={formData.nombre || ''} />
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Revisión</label>
-                  <input type="text" name="revision" className="glass-input" required placeholder="Ej: 01" />
+                  <input type="text" name="revision" className="glass-input" required placeholder="Ej: 01" defaultValue={formData.revision || ''} />
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Fecha</label>
-                  <input type="date" name="fecha" className="glass-input" required />
+                  <input type="date" name="fecha" className="glass-input" required defaultValue={formData.fecha || ''} />
                 </div>
 
               </fieldset>

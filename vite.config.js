@@ -20,6 +20,11 @@ export default defineConfig({
         target: 'https://default9444ead097714ed8a608802faff70d.4f.environment.api.powerplatform.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/post-info-doc/, '/powerautomate/automations/direct/workflows/e68d5f28ecae417795d02850be8d1060/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Z-bCVYx6z2hrTVThJWv1tZDLwa2Wmn7jthW0xllU5sA')
+      },
+      '/api/update-info-doc': {
+        target: 'https://default9444ead097714ed8a608802faff70d.4f.environment.api.powerplatform.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/update-info-doc/, '/powerautomate/automations/direct/workflows/5c1f24c9c67b44739b7aad45b6aa8e7f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=7An4ZeGB97FRJ-A65sktQnI-19IySipVRWWT3HWEYLo')
       }
     }
   }
