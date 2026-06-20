@@ -16,8 +16,29 @@ function InformacionDocumentadaView() {
 
   // Efecto para cargar los datos cuando exista el flujo
   useEffect(() => {
-    // Aquí implementaremos el fetch cuando el usuario nos pase la URL
-    console.log("Cargando Información Documentada...");
+    fetch(API_GET_URL)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP status ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        const itemsArray = Array.isArray(data) ? data : data.value;
+        if (itemsArray) {
+          const mappedDocs = itemsArray.map(item => ({
+            sharepointId: item.ID,
+            id: item.ID,
+            codigo: item.Codigo_x0020_N_x00b0_ || `${item.Codigo?.Value || ''}${item.Documento?.Value || ''}${item.N_x00fa_mero || item.N_x00b0_ || ''}`,
+            nombre: item.Nombre || '',
+            revision: item.Revision || '',
+            fecha: item.Fecha ? item.Fecha.split('T')[0] : (item.Created ? item.Created.split('T')[0] : ''),
+            enlace: item['{Link}'] || item['{Path}'] || '#'
+          }));
+          setDocumentos(mappedDocs);
+        }
+      })
+      .catch(err => {
+        console.error("Error cargando documentos:", err);
+      });
   }, []);
 
   const filteredDocs = documentos.filter(doc => 
