@@ -16,6 +16,7 @@ function InformacionDocumentadaView() {
   const API_UPDATE_URL = '/api/update-info-doc';
   
   const [formData, setFormData] = useState({});
+  const [isReadOnly, setIsReadOnly] = useState(false);
 
   // Efecto para cargar los datos cuando exista el flujo
   useEffect(() => {
@@ -49,6 +50,7 @@ function InformacionDocumentadaView() {
   }, []);
 
   const handleEdit = (doc) => {
+    setIsReadOnly(false);
     setFormData({
       sharepointId: doc.sharepointId,
       codigo: doc.codigo,
@@ -62,7 +64,13 @@ function InformacionDocumentadaView() {
     setCurrentView('form');
   };
 
+  const handleView = (doc) => {
+    handleEdit(doc);
+    setIsReadOnly(true);
+  };
+
   const handleNew = () => {
+    setIsReadOnly(false);
     setFormData({});
     setCurrentView('form');
   };
@@ -129,10 +137,11 @@ function InformacionDocumentadaView() {
                     <td>{doc.revision}</td>
                     <td>{doc.fecha}</td>
                     <td className="action-buttons-cell" style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-                      <a href={doc.enlace} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                        <button className="action-btn-view">👁️ Abrir</button>
-                      </a>
+                      <button className="action-btn-view" onClick={() => handleView(doc)}>👁️ Ver</button>
                       <button className="action-btn-edit" onClick={() => handleEdit(doc)}>✏️ Modificar</button>
+                      <a href={doc.enlace} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                        <button className="action-btn-view" style={{ backgroundColor: '#64748b' }}>🔗 Archivo</button>
+                      </a>
                     </td>
                   </tr>
                 ))}
@@ -151,10 +160,11 @@ function InformacionDocumentadaView() {
         <div className="content-grid">
           <div className="glass-card">
             <h2 style={{ color: 'var(--aubasa-dark)', marginBottom: '1.5rem', borderBottom: '2px solid var(--aubasa-blue)', paddingBottom: '0.5rem' }}>
-              {formData.sharepointId ? 'Modificar Documento' : 'Nuevo Documento'}
+              {isReadOnly ? 'Ver Documento' : (formData.sharepointId ? 'Modificar Documento' : 'Nuevo Documento')}
             </h2>
             <form onSubmit={async (e) => { 
               e.preventDefault(); 
+              if (isReadOnly) return;
               const formEl = e.target;
               const dataToSend = Object.fromEntries(new FormData(formEl).entries());
               if (formData.sharepointId) {
@@ -184,7 +194,7 @@ function InformacionDocumentadaView() {
                 alert('Error de conexión. Verifica tu internet.');
               }
             }}>
-              <fieldset className="form-grid" style={{ border: 'none', padding: 0, margin: 0 }}>
+              <fieldset className="form-grid" disabled={isReadOnly} style={{ border: 'none', padding: 0, margin: 0 }}>
                 
                 <div className="form-group">
                   <label className="form-label">Código</label>
@@ -231,10 +241,16 @@ function InformacionDocumentadaView() {
                 </div>
 
               </fieldset>
-              
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-                <button type="submit" className="submit-btn">Guardar Documento</button>
-                <button type="button" className="submit-btn" style={{ background: '#666' }} onClick={() => setCurrentView('gallery')}>Cancelar</button>
+
+              <div className="form-actions" style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                <button type="button" className="cancel-btn" onClick={() => setCurrentView('gallery')}>
+                  {isReadOnly ? 'Volver' : 'Cancelar'}
+                </button>
+                {!isReadOnly && (
+                  <button type="submit" className="submit-btn">
+                    Guardar Documento
+                  </button>
+                )}
               </div>
             </form>
           </div>
