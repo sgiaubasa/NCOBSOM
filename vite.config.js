@@ -1,0 +1,16 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    proxy: {
+      '/api/get-reportes': {
+        target: 'https://default9444ead097714ed8a608802faff70d.4f.environment.api.powerplatform.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/get-reportes/, '/powerautomate/automations/direct/workflows/4c354193a86d4357837d7876a83cf650/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=_snf62zsJq3YjzCRSDZAGGegs7WZNR9jg-Ilw_reuTk')
+      }
+    }
+  }
+})
