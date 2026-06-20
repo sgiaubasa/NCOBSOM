@@ -190,10 +190,14 @@ function InformacionDocumentadaView() {
                   <label className="form-label">Código</label>
                   <select name="codigo" className="glass-input" required defaultValue={formData.codigo || ''}>
                     <option value="">Seleccione el código...</option>
-                    <option value="SGI-PR">SGI-PR (Procedimiento)</option>
-                    <option value="SGI-MA">SGI-MA (Manual)</option>
-                    <option value="SGI-RG">SGI-RG (Registro)</option>
-                    <option value="SGI-IN">SGI-IN (Instructivo)</option>
+                    <option value="PAU/">PAU/</option>
+                    <option value="MG/">MG/</option>
+                    <option value="SC ME P001">SC ME P001</option>
+                    <option value="ITAU/">ITAU/</option>
+                    <option value="SGI-PR">SGI-PR</option>
+                    <option value="SGI-MA">SGI-MA</option>
+                    <option value="SGI-RG">SGI-RG</option>
+                    <option value="SGI-IN">SGI-IN</option>
                   </select>
                 </div>
 
