@@ -11,8 +11,9 @@ function InformacionDocumentadaView() {
   const [documentos, setDocumentos] = useState(mockDocumentos);
   const [searchTerm, setSearchTerm] = useState('');
   
-  // Próximamente: URLs de Power Automate
   const API_GET_URL = '/api/get-info-doc';
+  const API_POST_URL = '/api/post-info-doc';
+  const API_UPDATE_URL = ''; // Pendiente
 
   // Efecto para cargar los datos cuando exista el flujo
   useEffect(() => {
@@ -126,7 +127,34 @@ function InformacionDocumentadaView() {
             <h2 style={{ color: 'var(--aubasa-dark)', marginBottom: '1.5rem', borderBottom: '2px solid var(--aubasa-blue)', paddingBottom: '0.5rem' }}>
               Nuevo Documento
             </h2>
-            <form onSubmit={(e) => { e.preventDefault(); alert("Funcionalidad pendiente de conexión con Power Automate"); }}>
+            <form onSubmit={async (e) => { 
+              e.preventDefault(); 
+              const formData = new FormData(e.target);
+              const dataToSend = Object.fromEntries(formData.entries());
+              
+              try {
+                // Determine URL (POST vs UPDATE)
+                let targetUrl = dataToSend.sharepointId && API_UPDATE_URL !== '' ? API_UPDATE_URL : API_POST_URL;
+                
+                const response = await fetch(targetUrl, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(dataToSend)
+                });
+          
+                if (response.ok || response.status === 202) {
+                  alert('¡Documento guardado con éxito!');
+                  setCurrentView('gallery');
+                  // Ideally trigger a re-fetch here, but a reload or manual refresh works for now.
+                } else {
+                  const errorText = await response.text();
+                  alert(`Hubo un error al guardar.\nCódigo: ${response.status}\nDetalle: ${errorText}`);
+                }
+              } catch (error) {
+                console.error('Error de red:', error);
+                alert('Error de conexión. Verifica tu internet.');
+              }
+            }}>
               <fieldset className="form-grid" style={{ border: 'none', padding: 0, margin: 0 }}>
                 
                 <div className="form-group">
