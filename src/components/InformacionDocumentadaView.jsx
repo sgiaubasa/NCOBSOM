@@ -31,11 +31,20 @@ function InformacionDocumentadaView() {
         <div className="glass-card gallery-container">
           <div className="gallery-header" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                <h2 style={{ color: 'var(--aubasa-dark)', margin: 0 }}>Información Documentada</h2>
                <button 
                   className="submit-btn" 
-                  style={{ width: 'auto', padding: '0.6rem 1.5rem', margin: 0, fontSize: '0.9rem', background: 'var(--aubasa-accent)' }}
+                  style={{ 
+                    width: 'auto', 
+                    padding: '0.8rem 2rem', 
+                    margin: 0, 
+                    fontSize: '1rem', 
+                    fontWeight: 'bold',
+                    background: 'var(--aubasa-accent)',
+                    boxShadow: '0 4px 15px rgba(2, 132, 199, 0.4)',
+                    transform: 'translateY(-2px)'
+                  }}
                   onClick={() => setCurrentView('form')}
                >
                  ➕ Nuevo Documento
