@@ -23,7 +23,7 @@ const SECTORES = [
   "Relaciones Institucionales"
 ];
 
-function HallazgosView() {
+function HallazgosView({ currentUserEmail }) {
   const [currentView, setCurrentView] = useState('gallery'); // 'form' o 'gallery'
   
   // URLs de Power Automate
@@ -136,6 +136,9 @@ function HallazgosView() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { archivosAdjuntos, ...dataToSend } = formData;
+    
+    // Inyectar el usuario actual para auditoría
+    dataToSend.usuarioEditor = currentUserEmail;
     
     dataToSend.sector = dataToSend.sector.map(s => ({ "Value": s }));
     

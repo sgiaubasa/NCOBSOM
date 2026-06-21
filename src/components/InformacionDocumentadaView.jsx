@@ -6,7 +6,7 @@ const mockDocumentos = [
   { id: '2', codigo: 'DOC-002', nombre: 'Manual de Calidad', revision: '03', fecha: '2025-02-15', enlace: '#' }
 ];
 
-function InformacionDocumentadaView() {
+function InformacionDocumentadaView({ currentUserEmail }) {
   const [currentView, setCurrentView] = useState('gallery'); // 'form' o 'gallery'
   const [documentos, setDocumentos] = useState(mockDocumentos);
   const [searchTerm, setSearchTerm] = useState('');
@@ -163,6 +163,10 @@ function InformacionDocumentadaView() {
               if (isReadOnly) return;
               const formEl = e.target;
               const dataToSend = Object.fromEntries(new FormData(formEl).entries());
+              
+              // Inyectar el usuario actual para auditoría
+              dataToSend.usuarioEditor = currentUserEmail;
+              
               if (formData.sharepointId) {
                 dataToSend.sharepointId = formData.sharepointId;
               }
